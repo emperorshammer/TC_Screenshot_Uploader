@@ -78,7 +78,7 @@ config = loadSettings()
 # Main program monitor loop.
 while True:
     # Search for screenshots.
-    filenames = glob.glob("*.png")
+    filenames = [glob.glob(e) for e in ['*.png', '*.jpg', '*.jpeg']]
 
     # Intro message.
     os.system("cls")
