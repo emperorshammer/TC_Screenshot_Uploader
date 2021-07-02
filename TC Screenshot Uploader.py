@@ -78,7 +78,7 @@ config = loadSettings()
 # Main program monitor loop.
 while True:
     # Search for screenshots.
-    filenames = [glob.glob(e) for e in ['*.png', '*.jpg', '*.jpeg']]
+    filenames = glob.glob("*")
 
     # Intro message.
     os.system("cls")
@@ -97,24 +97,25 @@ while True:
         browser.submit()
 
         for filename in filenames:
-            print("\n\nDetected: " + filename)
+            if ".png" in filename or ".jpg" in filename or ".jpeg" in filename:
+                print("\n\nDetected: " + filename)
 
-            # Open and complete the match submission form.
-            browser.open(config.get("settings", "tc_submit_coop_url"))
-            browser.form = list(browser.forms())[0] # Get the first from from the webpage.
-            browser["game"] = [config.get("settings", "game")]
-            browser["name1w"] = [config.get("settings", "pin")]
-            bringAppToFront()
-            browser["kill1w"] = input("Please enter your number of kills and press 'enter': ")
+                # Open and complete the match submission form.
+                browser.open(config.get("settings", "tc_submit_coop_url"))
+                browser.form = list(browser.forms())[0] # Get the first from from the webpage.
+                browser["game"] = [config.get("settings", "game")]
+                browser["name1w"] = [config.get("settings", "pin")]
+                bringAppToFront()
+                browser["kill1w"] = input("Please enter your number of kills and press 'enter': ")
 
-            # Add the screenshot data and submit the form.
-            screenshot = open(filename, 'rb')
-            browser.form.add_file(screenshot, 'image/png', filename, 'ss1')
-            browser.submit()
-            screenshot.close()
-            shutil.move(filename, "Submitted/" + filename)
-            print("Upload Complete - " + filename)
-            sleep(2)
+                # Add the screenshot data and submit the form.
+                screenshot = open(filename, 'rb')
+                browser.form.add_file(screenshot, 'image/png', filename, 'ss1')
+                browser.submit()
+                screenshot.close()
+                shutil.move(filename, "Submitted/" + filename)
+                print("Upload Complete - " + filename)
+                sleep(2)
 
     sleep(0.5)
 #----------------------------------------------------------------------------------------------------------------------------------------------------#
