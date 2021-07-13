@@ -74,52 +74,53 @@ def windowEnumerationHandler(hwnd, top_windows):
 def askForGame():
     '''Function asks the user for which game the user is playing.'''
 
-    # XvT2 = XvT, XWA2 = XWA, SC2 = Star Conflict, BF32 = EA-Battlefront 1, EABFII = EA-Battlefront 2, SWS2 = SW Squadrons
-    games = ["xvt", "xwa", "sc", "bf1", "bf2", "sws"]
+    #      User Input : [ "PvE Name" , "PvP Name" , "Game Name", "Screenshot Path Option"]
+    gamesDict = {"xvt" : ["XvT2", "XvT", "X-Wing Vs. Tie Fighter", "screenshot_folder_xvt"],
+                "xwa" : ["XWA2", "XWA", "X-Wing Alliance", "screenshot_folder_xwa"],
+                "sc" :  ["SC2", "SC", "Star Conflict", "screenshot_folder_sc"],
+                "bf1" : ["BF32", "BF3", "EA Star Wars Battlefront", "screenshot_folder_eabf1"],
+                "bf2" : ["EABFII", "BF2", "EA Star Wars Battlefront II", "screenshot_folder_eabf2"],
+                "sws" : ["SWS2", "SWS", "Star Wars Squadrons", "screenshot_folder_sws"]}
 
-    #      User Input : [ "PvE Name" , "PvP Name" , "Game Name"]
-    gamesDir = {"xvt" : ["XvT2", "XvT", "X-Wing Vs. Tie Fighter"],
-                "xwa" : ["XWA2", "XWA", "X-Wing Alliance"],
-                "sc" :  ["SC2", "SC", "Star Conflict"],
-                "bf1" : ["BF32", "BF3", "EA Star Wars Battlefront"],
-                "bf2" : ["EABFII", "BF2", "EA Star Wars Battlefront II"],
-                "sws" : ["SWS2", "SWS", "Star Wars Squadrons"]}
-    options = """\n\nxvt = X-Wing Vs. Tie Fighter
-xwa = W-Wing Alliance
-sc = Star Conflict
-bf1 = EA Battlefront 1
-bf2 = EA Battlefront 2
-sws = Star Wars Squadrons"""
-    print(options)
-    gameStr = input("\nWhat game are you playing? ").lower()
+    print("\n")
+    for game in gamesDict:
+        if config.get("folders", gamesDict[game][3]):
+            print("\t" + game + " = " + gamesDict[game][2])
 
-    while gameStr not in games:
+    gameStr = input("\n\tWhich game are you playing? ").lower()
+
+    while gameStr not in gamesDict.keys():
         os.system("cls")
         print(header)
-        print(options)
-        gameStr = input("\nSorry that option isn't available...\n\nWhat game are you playing? ").lower()
+        print("\n")
+        for game in gamesDict:
+            if config.get("folders", gamesDict[game][3]):
+                print("\t" + game + " = " + gamesDict[game][2])
+        gameStr = input("\n\tSorry that option isn't available...\n\n\tWhich game are you playing? ").lower()
 
     # Get the game mode to be played.
+    os.system("cls")
+    print(header)
+    print("\n")
     mode, modeTitle = askForMode()
     if mode == "pve":
         modeNum = 0
     elif mode == "pvp":
         modeNum = 1
 
-    return gamesDir[gameStr][modeNum], gamesDir[gameStr][2], mode, modeTitle
+    return gamesDict[gameStr][modeNum], gamesDict[gameStr][2], mode, modeTitle
 #----------------------------------------------------------------------------------------------------------------------------------------------------#
 
 def askForMode():
     '''Function that asks the user for which game mode the user is playing.'''
 
-    # XvT2 = XvT, XWA2 = XWA, SC2 = Star Conflict, BF32 = EA-Battlefront 1, EABFII = EA-Battlefront 2, SWS2 = SW Squadrons
     modes = ["pve", "pvp"]
-    modeStr = input("\nAre you playing 'PvE' or 'PvP'? ").lower()
+    modeStr = input("\n\tAre you playing 'PvE' or 'PvP'? ").lower()
 
     while modeStr not in modes:
         os.system("cls")
         print(header)
-        modeStr = input("\nSorry that option isn't available...\n\nAre you playing 'PvE' or 'PvP'? ").lower()
+        modeStr = input("\n\tSorry that option isn't available...\n\n\tAre you playing 'PvE' or 'PvP'? ").lower()
 
     if modeStr == "pve":
         gameModeTitle  = " PvE / COOP"
@@ -140,11 +141,15 @@ def askForPlayerCount():
 
     count = 0
     while count <= 0 or count > max or not str(count).isdigit():
-        count = input("How many players are you submitting for? (1 to %s) "%str(max))
+        count = input("\n\tHow many players are you submitting for? (1 to %s) "%str(max))
         try:
             count = int(count)
         except ValueError:
-            print(count + " is not a valid entry...")
+            os.system("cls")
+            print(header)
+            print(gameHeader)
+            print("\n\n\tDetected: " + filename)
+            print("\n\t" + count + " is not a valid entry...")
             count = 0
 
     return count
@@ -156,7 +161,7 @@ def askYesNo(text):
 
     response = input(text).lower()
     while response != "y" and response != "n" and response != "yes" and response != "no":
-        response = input("\n\n%s is not a valid answer..."%response + text).lower()
+        response = input("\n\t%s is not a valid answer..."%response + text).lower()
 
     if response == "y" or response == "yes":
         return True
@@ -168,9 +173,9 @@ def askYesNo(text):
 def askForWinLose(name):
     '''Function that asks the user if a player won or loast a match.'''
 
-    response = input("Did %s win or lose the last PvP match? (w/l)"%name).lower()
+    response = input("\n\tDid %s win or lose the last PvP match? (w/l)"%name).lower()
     while response != "w" and response != "l" and response != "win" and response != "lose":
-        response = input("\n\n%s is not a valid answer..."%response).lower()
+        response = input("\n\t%s is not a valid answer..."%response).lower()
 
     if response == "w" or response == "win":
         return "w"
@@ -221,16 +226,18 @@ if mode == "pve":
 elif mode == "pvp":
     url = config.get("urls", "tc_submit_pvp_url")
 
-gameHeader += modeTitle
 header = """\n\n\t#####################################################
 \t#       SkyShadow's Auto Screenshot Submitter.      #
 \t#####################################################"""
+
+gameHeader += modeTitle + "\n\t-----------------------------------------------------"
 
 # Main program monitor loop.
 playerPins = [[config.get("user_settings", "pin"), config.get("user_settings", "callsign")]]
 players = 0
 samePlayers = False
 runOnce = False
+monitorMsg = "\n\n\tMonitoring for screenshots"
 
 while True:
 
@@ -241,7 +248,12 @@ while True:
     os.system("cls")
     print(header)
     print(gameHeader)
-    print("\n\nMonitoring for screenshots...")
+    print(monitorMsg)
+
+    # Monitor load bar.
+    monitorMsg += "."
+    if monitorMsg == "\n\n\tMonitoring for screenshots......":
+        monitorMsg = "\n\n\tMonitoring for screenshots"
 
     # Search for screenshots.
     filenames = glob.glob(screenshotFolder + r"\*")
@@ -249,11 +261,11 @@ while True:
     # Auto-submit any found screenshots.
     if filenames != []:
         for filename in filenames:
-            if ".png" in filename or ".jpg" in filename or ".jpeg" in filename:
-                print("Detected: " + filename)
-
-                winners = []
-                losers = []
+            if ".png" in filename or ".jpg" in filename or ".jpeg" in filename or ".gif" in filename:
+                os.system("cls")
+                print(header)
+                print(gameHeader)
+                print("\n\n\tDetected: " + filename)
 
                 # Log in to the administration page of the TC website.
                 browser = mechanize.Browser()
@@ -272,7 +284,7 @@ while True:
                 bringAppToFront() # Bring this app to the front and ask the user for the game report details.
 
                 if runOnce:
-                    samePlayers = askYesNo("\n\nUse the same player details from previous game? (y/n): ")
+                    samePlayers = askYesNo("\n\tUse the same player details from previous game? (y/n): ")
 
                 if not samePlayers:
                     playerPins = [[config.get("user_settings", "pin"), config.get("user_settings", "callsign")]] # Clear out the old pin data.
@@ -280,6 +292,9 @@ while True:
 
                 if players == 0:
                     players = askForPlayerCount()
+
+                winners = []
+                losers = []
 
                 for player in range(players):
                     if samePlayers:
@@ -290,15 +305,15 @@ while True:
                         if player != 0:
                             validPin = False
                             while not validPin:
-                                pin = input("\nPlease enter player %s's TC PIN and press 'enter': "%str(player + 1))
+                                pin = input("\n\tPlease enter player %s's TC PIN and press 'enter': "%str(player + 1))
 
                                 try:
                                     browser["name1w"] = [pin]
                                     validPin = True
                                 except Exception:
-                                    print("ERROR! %s is not a valid PIN in the TC Database!..."%pin)
+                                    print("\n\tERROR! %s is not a valid PIN in the TC Database!..."%pin)
 
-                            name = input("Please enter player %s's NAME and press 'enter': "%str(player + 1))
+                            name = input("\n\tPlease enter player %s's NAME and press 'enter': "%str(player + 1))
                             playerPins.append([pin, name])
 
                         else: # Use the script owners details from settings.ini
@@ -310,7 +325,7 @@ while True:
                     else:
                         result = "w"
 
-                    kills = input("Please enter %s's number of kills: "%name)
+                    kills = input("\n\tPlease enter %s's number of kills: "%name)
 
                     if result == "w":
                         winners.append([pin, name, int(kills)])
@@ -347,7 +362,12 @@ while True:
                 browser.submit()
                 screenshot.close()
                 shutil.move(filename, screenshotFolder + "\\Submitted\\" + filename.split("\\")[-1])
-                print("Upload Complete - " + filename)
+
+                os.system("cls")
+                print(header)
+                print(gameHeader)
+                print("\n\n\tUpload Complete - " + filename)
+
                 runOnce = True
                 sleep(2)
 
