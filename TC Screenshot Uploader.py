@@ -37,6 +37,11 @@ def initialSetup():
             os.mkdir(folder + "\\Submitted")
         except FileExistsError:
             pass # Folder already exists.
+        except FileNotFoundError:
+            os.system("cls")
+            print("\n\n\n\n\tERROR! %s not found on this computer.\n\tPlease ensure that the folder paths are set correctly in 'settings.ini'."%folder)
+            input("\n\tPress 'Enter' to exit.")
+            raise Exception() # Force closes the application.
 #----------------------------------------------------------------------------------------------------------------------------------------------------#
 
 
