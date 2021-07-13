@@ -11,7 +11,7 @@ should it change.
 # Disclaimer:
 The user of this software is responsible for ensuring that all submissions comply with current platform and COO policies. Failure to do so WILL result in your submission being rejected.
 
-# Antivirus Notice.
+# Antivirus Notice:
 The .exe version of this software WILL trigger a false positive antivirus alert. This is because the software moves screenshots to a "Submitted" folder after it submits the report.
 Antivirus software rightly identifies this as an act of Malware because of this. 
 To use the .exe version you will most likely need to make an exception for this program within your antivirus software.
