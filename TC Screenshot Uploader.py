@@ -189,6 +189,20 @@ def askForWinLose(name):
 #----------------------------------------------------------------------------------------------------------------------------------------------------#
 
 
+def getPartyInfo():
+    '''Function that returns a multiline string of current party members.'''
+
+    partyStr = ""
+    counter = 1
+    partyStr += "\n\tParty size: %s\n\tParty members:\n"%len(playerPins)
+    for pilot in playerPins:
+        partyStr += "\n\t\t%s - %s %s"%(str(counter), pilot[1], pilot[0])
+        counter += 1
+
+    return partyStr
+#----------------------------------------------------------------------------------------------------------------------------------------------------#
+
+
 #----------------------------------------------------------------------------------------------------------------------------------------------------#
 #                                                                     Main Program.                                                                  #
 #----------------------------------------------------------------------------------------------------------------------------------------------------#
@@ -289,7 +303,8 @@ while True:
                 bringAppToFront() # Bring this app to the front and ask the user for the game report details.
 
                 if runOnce:
-                    samePlayers = askYesNo("\n\tUse the same player details from previous game? (y/n): ")
+                    print(getPartyInfo())
+                    samePlayers = askYesNo("\n\tUse the same party details as above? (y/n): ")
 
                 if not samePlayers:
                     playerPins = [[config.get("user_settings", "pin"), config.get("user_settings", "callsign")]] # Clear out the old pin data.
@@ -318,7 +333,7 @@ while True:
                                 except Exception:
                                     print("\n\tERROR! %s is not a valid PIN in the TC Database!..."%pin)
 
-                            name = input("\n\tPlease enter player %s's NAME and press 'enter': "%str(player + 1))
+                            name = input("\tPlease enter player %s's NAME and press 'enter': "%str(player + 1))
                             playerPins.append([pin, name])
 
                         else: # Use the script owners details from settings.ini
