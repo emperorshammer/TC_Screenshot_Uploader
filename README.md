@@ -28,8 +28,7 @@ Save these files together into the same folder anywhere on your PC.
 
 for the .py version of the software:
 
-Note: Python 3 is required to use this script.
-To convert this script to Python 2 standard, replace all occurrences of 'input(' with 'raw_input('.
+Note: Python 3 is required to use this script. Python 2 is not supported.
 
 Download "TC Screenshot Uploader.py", "settings.ini" and the optional "TC Screenshot Uploader.bat" from:
 https://github.com/emperorshammer/TC_Screenshot_Uploader
@@ -37,6 +36,6 @@ Save these files together into the same folder anywhere on your PC.
 
 Edit settings.ini with your TC username, password, callsign and add the directories where your screenshots are saved to for each game, if you don't own a specific game, then you may leave it blank and that game will not show as an option when the program is running. 
 This program is designed to be run while playing a game. 
-Simply run the .exe or .py (via command prompt or the optional batch file) if you have Python installed and follow the on-screen instructions to set the program up for your game / format of choice.
+Simply run the .exe or .py (via command prompt or the optional batch file) if you have Python 3 installed and follow the on-screen instructions to set the program up for your game / format of choice.
 Once your match is complete take a screenshot of the scoreboard as normal. TC Screenshot Uploader will automatically detect your new screenshot and prompt you for the match player and kill information. 
 Once all entries are complete this program will then submit your screenshot to the TC database for approval.
