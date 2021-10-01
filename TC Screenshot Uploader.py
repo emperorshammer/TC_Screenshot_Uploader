@@ -21,6 +21,7 @@ from PIL import Image
 import win32gui, win32com.client
 from time import sleep
 import configparser
+import ssl
 #----------------------------------------------------------------------------------------------------------------------------------------------------#
 
 
@@ -288,6 +289,17 @@ while True:
 
                 # Log in to the administration page of the TC website.
                 browser = mechanize.Browser()
+
+                # Disable SSL verification.
+                try:
+                    _create_unverified_https_context = ssl._create_unverified_context
+                except AttributeError:
+                    # Legacy Python that doesn't verify HTTPS certificates by default
+                    pass
+                else:
+                    # Handle target environment that doesn't support HTTPS verification
+                    ssl._create_default_https_context = _create_unverified_https_context
+
                 browser.open(config.get("urls", "tc_admin_url"))
                 browser.form = list(browser.forms())[0]
                 browser["pin"] = config.get("user_settings", "pin")
