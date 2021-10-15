@@ -13,12 +13,12 @@
 #----------------------------------------------------------------------------------------------------------------------------------------------------#
 #                                                                      Imports.                                                                      #
 #----------------------------------------------------------------------------------------------------------------------------------------------------#
-import mechanize
+import mechanize # -- pip install mechanize
 import shutil
 import os
 import glob
 from PIL import Image
-import win32gui, win32com.client
+import win32gui, win32com.client # -- pip install pywin32
 from time import sleep
 import configparser
 import ssl
